@@ -45,3 +45,6 @@ public class TestController {......
 日志信息：
 20:19:30.345 [1890318768@qtp-369351727-0] INFO  com.log.aop.ControllerAspect - {"logTag":true,"method":"test","params":[{"account":"43523werwre","id":234}],"retValue":{"account":"admin","id":1},"time":5484,"url":"/clq-web-mvc/admin/public/test"}
 ```
+
+#### 具体使用实例
+https://github.com/strictnerd/web-mvc
