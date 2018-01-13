@@ -6,9 +6,10 @@
 
 
 ## 使用说明
-1. 方法注解使用方式：
 
-> 在controller上添加 @EnableMethodLog，在具体方法添加 @LogMethod
+#### 方法注解使用方式：
+
+在controller上添加 @EnableMethodLog，在具体方法添加 @LogMethod
 例如：
 ```
 /**
@@ -29,7 +30,18 @@ public class TestController {
        // throw new IllegalArgumentException("参数非法 ");
         return select;
     }
-日志信息如下：
+日志信息：
 15:57:12.483 [2025955363@qtp-98801744-0] INFO  com.log.aop.MethodAspect - {"method":"test","params":[{"account":"43523werwre","id":234}],"retValue":{"account":"admin","id":1},"time":3980}
 ```
 
+#### controller注解使用方式
+在controller上添加 @EnableControllerLog
+```
+@Controller
+@RequestMapping("/admin/public")
+@EnableControllerLog
+public class TestController {......
+
+日志信息：
+20:19:30.345 [1890318768@qtp-369351727-0] INFO  com.log.aop.ControllerAspect - {"logTag":true,"method":"test","params":[{"account":"43523werwre","id":234}],"retValue":{"account":"admin","id":1},"time":5484,"url":"/clq-web-mvc/admin/public/test"}
+```
