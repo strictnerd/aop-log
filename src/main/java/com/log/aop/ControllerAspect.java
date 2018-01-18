@@ -10,8 +10,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.annotation.Annotation;
 
 /**
  * 记录Controller的调用日志
@@ -44,11 +47,18 @@ public class ControllerAspect {
         }
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Object[] args = joinPoint.getArgs();
         String target = signature.getMethod().getName();
-        if(args != null) {
-            parameterBean.setParams(args);
-            parameterBean.setMethod(target);
+        parameterBean.setMethod(target);
+        Annotation[][] parameterAnnotations = signature.getMethod().getParameterAnnotations();
+
+        Object[] args = joinPoint.getArgs();
+        //记录@RequestBody中内容
+        for (int i = 0; i < parameterAnnotations.length; i++) {
+            for (int j = 0; j < parameterAnnotations[i].length; j++) {
+                if (parameterAnnotations[i][j].annotationType().equals(RequestBody.class)) {
+                    parameterBean.setParams(args[i]);
+                }
+            }
         }
         //执行被代理方法
         Object result = null;

@@ -10,6 +10,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.lang.annotation.Annotation;
 
 /**
  * 记录@LogMethod注解方法的调用日志
@@ -40,8 +43,15 @@ public class MethodAspect {
         }
         //参数
         try {
-            if (joinPoint.getArgs() != null) {
-                parameterBean.setParams(joinPoint.getArgs());
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            Annotation[][] parameterAnnotations = signature.getMethod().getParameterAnnotations();
+            Object[] args = joinPoint.getArgs();
+            for (int i = 0; i < parameterAnnotations.length; i++) {
+                for (int j = 0; j < parameterAnnotations[i].length; j++) {
+                    if (parameterAnnotations[i][j].annotationType().equals(RequestBody.class)) {
+                        parameterBean.setParams(args[i]);
+                    }
+                }
             }
         } catch (Exception e) {
             log.info("序列化方法参数异常，无法输出日志");
